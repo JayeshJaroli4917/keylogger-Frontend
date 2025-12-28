@@ -10,16 +10,19 @@ const submitBtn = document.getElementById("submitBtn");
 const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 
-let duration = 300;
+let duration = 30;
 let timerInterval;
 let testCompleted = false;
 
+// 🔒 Disable right-click everywhere
 document.addEventListener("contextmenu", e => e.preventDefault());
 
+// 🔒 Disable copy, paste, cut, drag
 ["copy", "paste", "cut", "drop"].forEach(evt => {
   document.addEventListener(evt, e => e.preventDefault());
 });
 
+// 🔒 Disable Ctrl + C / V / X
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey) {
     if (["c", "v", "x"].includes(e.key.toLowerCase())) {
@@ -28,6 +31,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
+// 📧 Institute email validation
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
 startBtn.onclick = () => {
@@ -38,20 +42,21 @@ startBtn.onclick = () => {
     return;
   }
 
+  // Reset
   keyDownTimes = {};
   lastKeyReleaseTime = null;
   individualKeys = [];
   digraphs = [];
   area.value = "";
-  duration = 300;
+  duration = 30;
   testCompleted = false;
 
   area.disabled = false;
   area.focus();
   startBtn.disabled = true;
-  submitBtn.disabled = true; 
+  submitBtn.disabled = true;
 
-  timerDisplay.textContent = "Time Left: 5:00";
+  timerDisplay.textContent = "Time Left: 0:30";
 
   timerInterval = setInterval(() => {
     duration--;
@@ -63,20 +68,20 @@ startBtn.onclick = () => {
       clearInterval(timerInterval);
       area.disabled = true;
       testCompleted = true;
-      submitBtn.disabled = false; 
-      alert("Time Over! You can now submit the data.");
+      submitBtn.disabled = false;
+      alert("Time Over! You can now submit.");
     }
   }, 1000);
 };
 
-
+// ⌨️ Key Down
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
   }
 });
 
-
+// ⌨️ Key Up
 area.addEventListener("keyup", e => {
   const releaseTime = performance.now();
   const pressTime = keyDownTimes[e.code];
@@ -112,13 +117,11 @@ area.addEventListener("keyup", e => {
 
   lastKeyReleaseTime = releaseTime;
   delete keyDownTimes[e.code];
-});
+};
 
+// 📤 Submit (ONLY after time over)
 submitBtn.onclick = async () => {
-  if (!testCompleted) {
-    alert("You can submit only after time is over.");
-    return;
-  }
+  if (!testCompleted) return;
 
   const username = usernameInput.value.trim();
   const text = area.value.trim();
@@ -129,18 +132,12 @@ submitBtn.onclick = async () => {
     return;
   }
 
-  if (charCount < 500) {
-    alert(`Time ended before reaching 500 characters.
-Submitting ${charCount} characters.`);
-  }
-
   submitBtn.disabled = true;
 
   const payload = {
     username,
     typedText: text,
     charCount,
-    timeCompleted: true,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
@@ -158,7 +155,13 @@ Submitting ${charCount} characters.`);
 
     if (!response.ok) throw new Error("Server error");
 
-    alert("Data submitted successfully!");
+    // 🎉 Final Success Messages
+    if (charCount >= 500) {
+      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
+    } else {
+      alert("Data submitted successfully");
+    }
+
   } catch (err) {
     alert("Submission failed. Try again.");
     submitBtn.disabled = false;
