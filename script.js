@@ -1,4 +1,6 @@
-
+/***********************
+ * GLOBAL STATE
+ ***********************/
 let keyDownTimes = {};
 let lastKeyReleaseTime = null;
 
@@ -9,7 +11,9 @@ let duration = 300;
 let timerInterval;
 let testCompleted = false;
 
-
+/***********************
+ * DOM ELEMENTS
+ ***********************/
 const area = document.getElementById("typingArea");
 const startBtn = document.getElementById("startBtn");
 const submitBtn = document.getElementById("submitBtn");
@@ -17,6 +21,9 @@ const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 const referenceTextEl = document.getElementById("referenceText");
 
+/***********************
+ * SECURITY LOCKS
+ ***********************/
 document.addEventListener("contextmenu", e => e.preventDefault());
 
 ["copy", "paste", "cut", "drop"].forEach(evt => {
@@ -31,23 +38,54 @@ document.addEventListener("keydown", e => {
   }
 });
 
+/***********************
+ * EMAIL VALIDATION
+ ***********************/
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
-const baseText =
-  "Technology is best when it brings people together. Typing consistently improves focus accuracy and confidence. Practice builds speed naturally over time and strengthens muscle memory. ";
+/***********************
+ * DICTIONARY (MONKEYTYPE STYLE)
+ ***********************/
+const DICTIONARY = [
+  "time","person","year","way","day","thing","world","life","hand","part",
+  "technology","computer","keyboard","typing","internet","software","network",
+  "frontend","backend","javascript","python","engineering","student","practice",
+  "learning","speed","accuracy","focus","confidence","discipline","research",
+  "system","design","development","performance","analysis","security"
+];
 
-let fullText = "";
-
-function extendText() {
-  fullText += baseText;
+/***********************
+ * RANDOM WORD GENERATOR
+ ***********************/
+function generateRandomWords(count = 25) {
+  let words = [];
+  for (let i = 0; i < count; i++) {
+    const index = Math.floor(Math.random() * DICTIONARY.length);
+    words.push(DICTIONARY[index]);
+  }
+  return words.join(" ");
 }
 
-function loadTypingText() {
-  fullText = "";
-  extendText();
-  referenceTextEl.textContent = fullText;
+/***********************
+ * INFINITE REFERENCE TEXT
+ ***********************/
+let referenceText = "";
+
+function loadInitialWords() {
+  referenceText = generateRandomWords(25);
+  referenceTextEl.textContent = referenceText;
 }
 
+function extendWordsIfNeeded(typedLength) {
+  if (typedLength + 50 > referenceText.length) {
+    referenceText += " " + generateRandomWords(20);
+    referenceTextEl.textContent = referenceText;
+  }
+}
+
+/***********************
+ * START BUTTON
+ ***********************/
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
@@ -56,7 +94,7 @@ startBtn.onclick = () => {
     return;
   }
 
-  // Reset everything
+  // Reset state
   keyDownTimes = {};
   lastKeyReleaseTime = null;
   individualKeys = [];
@@ -68,10 +106,10 @@ startBtn.onclick = () => {
   area.disabled = false;
   area.focus();
 
-  submitBtn.disabled = true;
   startBtn.disabled = true;
+  submitBtn.disabled = true;
 
-  loadTypingText();
+  loadInitialWords();
 
   timerDisplay.textContent = "Time Left: 5:00";
 
@@ -91,13 +129,16 @@ startBtn.onclick = () => {
   }, 1000);
 };
 
+/***********************
+ * EXTEND WORDS WHILE TYPING
+ ***********************/
 area.addEventListener("input", () => {
-  if (area.value.length + 50 > fullText.length) {
-    extendText();
-    referenceTextEl.textContent = fullText;
-  }
+  extendWordsIfNeeded(area.value.length);
 });
 
+/***********************
+ * KEYSTROKE DYNAMICS
+ ***********************/
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
