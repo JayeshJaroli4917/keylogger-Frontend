@@ -85,7 +85,7 @@ function loadInitialWords() {
 }
 
 function extendWordsIfNeeded(typedLength) {
-  if (typedLength + 50 > referenceText.length) {
+  if (typedLength + 100 > referenceText.length) {
     referenceText += " " + generateRandomWords(20);
     referenceTextEl.textContent = referenceText;
   }
