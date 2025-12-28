@@ -1,28 +1,38 @@
+/***********************
+ * GLOBAL STATE
+ ***********************/
 let keyDownTimes = {};
 let lastKeyReleaseTime = null;
 
 let individualKeys = [];
 let digraphs = [];
 
+let duration = 30;
+let timerInterval;
+let testCompleted = false;
+
+/***********************
+ * DOM ELEMENTS
+ ***********************/
 const area = document.getElementById("typingArea");
 const startBtn = document.getElementById("startBtn");
 const submitBtn = document.getElementById("submitBtn");
 const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
+const referenceTextEl = document.getElementById("referenceText");
 
-let duration = 30;
-let timerInterval;
-let testCompleted = false;
-
-// 🔒 Disable right-click everywhere
+/***********************
+ * SECURITY LOCKS
+ ***********************/
+// Disable right click everywhere
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// 🔒 Disable copy, paste, cut, drag
+// Disable copy, paste, cut, drag
 ["copy", "paste", "cut", "drop"].forEach(evt => {
   document.addEventListener(evt, e => e.preventDefault());
 });
 
-// 🔒 Disable Ctrl + C / V / X
+// Disable Ctrl + C / V / X
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey) {
     if (["c", "v", "x"].includes(e.key.toLowerCase())) {
@@ -31,9 +41,32 @@ document.addEventListener("keydown", e => {
   }
 });
 
-// 📧 Institute email validation
+/***********************
+ * EMAIL VALIDATION
+ ***********************/
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
+/***********************
+ * MONKEYTYPE-STYLE TEXT
+ ***********************/
+const baseText =
+  "Technology is best when it brings people together. Typing consistently improves focus accuracy and confidence. Practice builds speed naturally over time and strengthens muscle memory. ";
+
+let fullText = "";
+
+function extendText() {
+  fullText += baseText;
+}
+
+function loadTypingText() {
+  fullText = "";
+  extendText();
+  referenceTextEl.textContent = fullText;
+}
+
+/***********************
+ * START BUTTON
+ ***********************/
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
@@ -42,19 +75,22 @@ startBtn.onclick = () => {
     return;
   }
 
-  // Reset
+  // Reset everything
   keyDownTimes = {};
   lastKeyReleaseTime = null;
   individualKeys = [];
   digraphs = [];
-  area.value = "";
-  duration = 30;
   testCompleted = false;
+  duration = 30;
 
+  area.value = "";
   area.disabled = false;
   area.focus();
-  startBtn.disabled = true;
+
   submitBtn.disabled = true;
+  startBtn.disabled = true;
+
+  loadTypingText();
 
   timerDisplay.textContent = "Time Left: 0:30";
 
@@ -74,14 +110,25 @@ startBtn.onclick = () => {
   }, 1000);
 };
 
-// ⌨️ Key Down
+/***********************
+ * INFINITE TEXT LOOP
+ ***********************/
+area.addEventListener("input", () => {
+  if (area.value.length + 50 > fullText.length) {
+    extendText();
+    referenceTextEl.textContent = fullText;
+  }
+});
+
+/***********************
+ * KEYSTROKE DYNAMICS
+ ***********************/
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
   }
 });
 
-// ⌨️ Key Up
 area.addEventListener("keyup", e => {
   const releaseTime = performance.now();
   const pressTime = keyDownTimes[e.code];
@@ -117,20 +164,17 @@ area.addEventListener("keyup", e => {
 
   lastKeyReleaseTime = releaseTime;
   delete keyDownTimes[e.code];
-};
+});
 
-// 📤 Submit (ONLY after time over)
+/***********************
+ * SUBMIT (ONLY AFTER TIME OVER)
+ ***********************/
 submitBtn.onclick = async () => {
   if (!testCompleted) return;
 
   const username = usernameInput.value.trim();
   const text = area.value.trim();
   const charCount = text.length;
-
-  if (!emailRegex.test(username)) {
-    alert("Invalid institute email!");
-    return;
-  }
 
   submitBtn.disabled = true;
 
@@ -153,10 +197,10 @@ submitBtn.onclick = async () => {
       }
     );
 
-    if (!response.ok) throw new Error("Server error");
+    if (!response.ok) throw new Error();
 
     if (charCount >= 500) {
-      alert("Data submitted successfully  and you won a chocolate ");
+      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
     } else {
       alert("Data submitted successfully");
     }
