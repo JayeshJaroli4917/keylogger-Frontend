@@ -134,3 +134,17 @@ submitBtn.onclick = async () => {
   alert("Data submitted successfully!");
   console.log(result);
 })
+.catch(err => {
+  console.error(err);
+  alert("Submission failed");
+});
+
+
+    if (!response.ok) throw new Error("Server error");
+
+    alert("Data submitted successfully!");
+  } catch (err) {
+    alert("Failed to submit data. Try again.");
+    submitBtn.disabled = false;
+  }
+};
