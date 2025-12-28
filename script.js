@@ -28,7 +28,6 @@ document.addEventListener("keydown", e => {
   }
 });
 
-// 📧 Institute Email Validation
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
 startBtn.onclick = () => {
@@ -70,14 +69,14 @@ startBtn.onclick = () => {
   }, 1000);
 };
 
-// ⌨️ Key Down
+
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
   }
 });
 
-// ⌨️ Key Up
+
 area.addEventListener("keyup", e => {
   const releaseTime = performance.now();
   const pressTime = keyDownTimes[e.code];
@@ -115,7 +114,6 @@ area.addEventListener("keyup", e => {
   delete keyDownTimes[e.code];
 });
 
-// 📤 Submit (ONLY AFTER TIME OVER)
 submitBtn.onclick = async () => {
   if (!testCompleted) {
     alert("You can submit only after time is over.");
