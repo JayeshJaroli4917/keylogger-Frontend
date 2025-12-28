@@ -1,0 +1,28 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 700 px;
+    margin: auto;
+    padding: 25px;
+}
+
+input, textArea{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+textarea{
+    height: 170px;
+}
+
+button {
+    margin-top: 14px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+#timer{
+    font-weight: bold;
+    margin-top: 50px;
+}
