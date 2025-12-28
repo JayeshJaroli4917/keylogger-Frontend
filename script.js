@@ -14,10 +14,31 @@ let duration = 30;
 let timerInterval;
 let testCompleted = false;
 
+// 🔒 Disable right-click on entire site
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+// 🔒 Disable copy, paste, cut, drag
+["copy", "paste", "cut", "drop"].forEach(event => {
+  document.addEventListener(event, e => e.preventDefault());
+});
+
+// 🔒 Disable Ctrl + C / V / X (global)
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey) {
+    if (["c", "v", "x"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+  }
+});
+
+// 📧 Institute Email Validation
+const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
+
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
-  if (!username) {
-    alert("Please enter your name first");
+
+  if (!emailRegex.test(username)) {
+    alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
     return;
   }
 
@@ -52,13 +73,15 @@ startBtn.onclick = () => {
   }, 1000);
 };
 
-area.addEventListener("keydown", (e) => {
+// ⌨️ Key Down
+area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
   }
 });
 
-area.addEventListener("keyup", (e) => {
+// ⌨️ Key Up
+area.addEventListener("keyup", e => {
   const releaseTime = performance.now();
   const pressTime = keyDownTimes[e.code];
   if (!pressTime) return;
@@ -68,20 +91,18 @@ area.addEventListener("keyup", (e) => {
     ? pressTime - lastKeyReleaseTime
     : 0;
 
-  const keyData = {
+  individualKeys.push({
     key: e.key,
     code: e.code,
     pressTime,
     releaseTime,
     holdTime_HT: holdTime,
     flightTime_FT: flightTime
-  };
-
-  individualKeys.push(keyData);
+  });
 
   if (individualKeys.length >= 2) {
     const k1 = individualKeys[individualKeys.length - 2];
-    const k2 = keyData;
+    const k2 = individualKeys[individualKeys.length - 1];
 
     digraphs.push({
       digraph: k1.key + k2.key,
@@ -97,17 +118,24 @@ area.addEventListener("keyup", (e) => {
   delete keyDownTimes[e.code];
 });
 
-/* ---------- SUBMIT DATA ---------- */
+// 📤 Submit
 submitBtn.onclick = async () => {
   const username = usernameInput.value.trim();
+  const text = area.value.trim();
+  const charCount = text.length;
 
-  if (!username) {
-    alert("Username is required!");
+  if (!emailRegex.test(username)) {
+    alert("Invalid institute email!");
     return;
   }
 
   if (!testCompleted) {
-    alert("Please complete the test first.");
+    alert("Please complete the typing test first.");
+    return;
+  }
+
+  if (charCount < 500) {
+    alert(`Minimum 500 characters required. Currently typed: ${charCount}`);
     return;
   }
 
@@ -115,18 +143,22 @@ submitBtn.onclick = async () => {
 
   const payload = {
     username,
-    typedText: area.value,
+    typedText: text,
+    charCount,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
   };
 
   try {
-    const response = await fetch("https://keylogger-backend.vercel.app/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    const response = await fetch(
+      "https://keylogger-backend.vercel.app/api/submit",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    );
 
     if (!response.ok) throw new Error("Server error");
 
