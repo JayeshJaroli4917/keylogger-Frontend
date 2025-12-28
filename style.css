@@ -26,3 +26,14 @@ button {
     font-weight: bold;
     margin-top: 50px;
 }
+
+.reference-text {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #333;
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 6px;
+  user-select: none;
+}
