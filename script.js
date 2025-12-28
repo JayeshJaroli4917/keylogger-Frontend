@@ -1,6 +1,4 @@
-/***********************
- * GLOBAL STATE
- ***********************/
+
 let keyDownTimes = {};
 let lastKeyReleaseTime = null;
 
@@ -11,9 +9,7 @@ let duration = 300;
 let timerInterval;
 let testCompleted = false;
 
-/***********************
- * DOM ELEMENTS
- ***********************/
+
 const area = document.getElementById("typingArea");
 const startBtn = document.getElementById("startBtn");
 const submitBtn = document.getElementById("submitBtn");
@@ -21,18 +17,12 @@ const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 const referenceTextEl = document.getElementById("referenceText");
 
-/***********************
- * SECURITY LOCKS
- ***********************/
-// Disable right click everywhere
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// Disable copy, paste, cut, drag
 ["copy", "paste", "cut", "drop"].forEach(evt => {
   document.addEventListener(evt, e => e.preventDefault());
 });
 
-// Disable Ctrl + C / V / X
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey) {
     if (["c", "v", "x"].includes(e.key.toLowerCase())) {
@@ -41,14 +31,8 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/***********************
- * EMAIL VALIDATION
- ***********************/
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
-/***********************
- * MONKEYTYPE-STYLE TEXT
- ***********************/
 const baseText =
   "Technology is best when it brings people together. Typing consistently improves focus accuracy and confidence. Practice builds speed naturally over time and strengthens muscle memory. ";
 
@@ -64,9 +48,6 @@ function loadTypingText() {
   referenceTextEl.textContent = fullText;
 }
 
-/***********************
- * START BUTTON
- ***********************/
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
@@ -110,9 +91,6 @@ startBtn.onclick = () => {
   }, 1000);
 };
 
-/***********************
- * INFINITE TEXT LOOP
- ***********************/
 area.addEventListener("input", () => {
   if (area.value.length + 50 > fullText.length) {
     extendText();
@@ -120,9 +98,6 @@ area.addEventListener("input", () => {
   }
 });
 
-/***********************
- * KEYSTROKE DYNAMICS
- ***********************/
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
