@@ -17,12 +17,12 @@ let testCompleted = false;
 // 🔒 Disable right-click on entire site
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// 🔒 Disable copy, paste, cut, drag
-["copy", "paste", "cut", "drop"].forEach(event => {
-  document.addEventListener(event, e => e.preventDefault());
+// 🔒 Disable copy, paste, cut, drag globally
+["copy", "paste", "cut", "drop"].forEach(evt => {
+  document.addEventListener(evt, e => e.preventDefault());
 });
 
-// 🔒 Disable Ctrl + C / V / X (global)
+// 🔒 Disable Ctrl + C / V / X
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey) {
     if (["c", "v", "x"].includes(e.key.toLowerCase())) {
@@ -42,6 +42,7 @@ startBtn.onclick = () => {
     return;
   }
 
+  // Reset everything
   keyDownTimes = {};
   lastKeyReleaseTime = null;
   individualKeys = [];
@@ -53,7 +54,7 @@ startBtn.onclick = () => {
   area.disabled = false;
   area.focus();
   startBtn.disabled = true;
-  submitBtn.disabled = true;
+  submitBtn.disabled = true; // 🔒 cannot submit before time ends
 
   timerDisplay.textContent = "Time Left: 0:30";
 
@@ -66,8 +67,8 @@ startBtn.onclick = () => {
     if (duration <= 0) {
       clearInterval(timerInterval);
       area.disabled = true;
-      submitBtn.disabled = false;
       testCompleted = true;
+      submitBtn.disabled = false; // ✅ submit enabled ONLY now
       alert("Time Over! You can now submit the data.");
     }
   }, 1000);
@@ -118,8 +119,13 @@ area.addEventListener("keyup", e => {
   delete keyDownTimes[e.code];
 });
 
-// 📤 Submit
+// 📤 Submit (ONLY AFTER TIME OVER)
 submitBtn.onclick = async () => {
+  if (!testCompleted) {
+    alert("You can submit only after time is over.");
+    return;
+  }
+
   const username = usernameInput.value.trim();
   const text = area.value.trim();
   const charCount = text.length;
@@ -129,14 +135,10 @@ submitBtn.onclick = async () => {
     return;
   }
 
-  if (!testCompleted) {
-    alert("Please complete the typing test first.");
-    return;
-  }
-
+  // ⚠️ 500 chars rule only enforced if user managed to type enough before time end
   if (charCount < 500) {
-    alert(`Minimum 500 characters required. Currently typed: ${charCount}`);
-    return;
+    alert(`Time ended before reaching 500 characters.
+Submitting ${charCount} characters.`);
   }
 
   submitBtn.disabled = true;
@@ -145,6 +147,7 @@ submitBtn.onclick = async () => {
     username,
     typedText: text,
     charCount,
+    timeCompleted: true,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
@@ -164,7 +167,7 @@ submitBtn.onclick = async () => {
 
     alert("Data submitted successfully!");
   } catch (err) {
-    alert("Failed to submit data. Try again.");
+    alert("Submission failed. Try again.");
     submitBtn.disabled = false;
   }
 };
