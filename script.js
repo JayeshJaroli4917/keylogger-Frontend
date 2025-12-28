@@ -155,9 +155,8 @@ submitBtn.onclick = async () => {
 
     if (!response.ok) throw new Error("Server error");
 
-    // 🎉 Final Success Messages
     if (charCount >= 500) {
-      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
+      alert("Data submitted successfully  and you won a chocolate ");
     } else {
       alert("Data submitted successfully");
     }
