@@ -10,7 +10,7 @@ const submitBtn = document.getElementById("submitBtn");
 const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 
-let duration = 30;
+let duration = 300;
 let timerInterval;
 let testCompleted = false;
 
@@ -28,6 +28,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
+// 📧 Institute Email Validation
 const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
 
 startBtn.onclick = () => {
@@ -43,15 +44,15 @@ startBtn.onclick = () => {
   individualKeys = [];
   digraphs = [];
   area.value = "";
-  duration = 30;
+  duration = 300;
   testCompleted = false;
 
   area.disabled = false;
   area.focus();
   startBtn.disabled = true;
-  submitBtn.disabled = true;
+  submitBtn.disabled = true; 
 
-  timerDisplay.textContent = "Time Left: 0:30";
+  timerDisplay.textContent = "Time Left: 5:00";
 
   timerInterval = setInterval(() => {
     duration--;
@@ -63,18 +64,20 @@ startBtn.onclick = () => {
       clearInterval(timerInterval);
       area.disabled = true;
       testCompleted = true;
-      submitBtn.disabled = false;
-      alert("Time Over! You can now submit.");
+      submitBtn.disabled = false; 
+      alert("Time Over! You can now submit the data.");
     }
   }, 1000);
 };
 
+// ⌨️ Key Down
 area.addEventListener("keydown", e => {
   if (!keyDownTimes[e.code]) {
     keyDownTimes[e.code] = performance.now();
   }
 });
 
+// ⌨️ Key Up
 area.addEventListener("keyup", e => {
   const releaseTime = performance.now();
   const pressTime = keyDownTimes[e.code];
@@ -110,10 +113,14 @@ area.addEventListener("keyup", e => {
 
   lastKeyReleaseTime = releaseTime;
   delete keyDownTimes[e.code];
-};
+});
 
+// 📤 Submit (ONLY AFTER TIME OVER)
 submitBtn.onclick = async () => {
-  if (!testCompleted) return;
+  if (!testCompleted) {
+    alert("You can submit only after time is over.");
+    return;
+  }
 
   const username = usernameInput.value.trim();
   const text = area.value.trim();
@@ -124,12 +131,18 @@ submitBtn.onclick = async () => {
     return;
   }
 
+  if (charCount < 500) {
+    alert(`Time ended before reaching 500 characters.
+Submitting ${charCount} characters.`);
+  }
+
   submitBtn.disabled = true;
 
   const payload = {
     username,
     typedText: text,
     charCount,
+    timeCompleted: true,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
@@ -147,13 +160,7 @@ submitBtn.onclick = async () => {
 
     if (!response.ok) throw new Error("Server error");
 
-  
-    if (charCount >= 500) {
-      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
-    } else {
-      alert("Data submitted successfully");
-    }
-
+    alert("Data submitted successfully!");
   } catch (err) {
     alert("Submission failed. Try again.");
     submitBtn.disabled = false;
