@@ -210,12 +210,12 @@ submitBtn.onclick = async () => {
     );
 
     if (!response.ok) throw new Error();
-    
-if (result.lottery.isWinner) {
-  alert(`🎉 You won ${result.lottery.prize}`);
-} else {
-  alert("Data submit successfully");
-}
+
+    if (charCount >= 1100) {
+      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
+    } else {
+      alert("Data submitted successfully");
+    }
 
   } catch (err) {
     alert("Submission failed. Try again.");
