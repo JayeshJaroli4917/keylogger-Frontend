@@ -5,7 +5,7 @@ let lastKeyReleaseTime = null;
 let individualKeys = [];
 let digraphs = [];
 
-let duration = 30;
+let duration = 300;
 let timerInterval;
 let testCompleted = false;
 
@@ -32,7 +32,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
-const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
+//const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
 
 
 const DICTIONARY = [
@@ -95,17 +95,17 @@ function extendWordsIfNeeded(typedLength) {
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
-  if (!emailRegex.test(username)) {
-    alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
-    return;
-  }
+ // if (!emailRegex.test(username)) {
+   // alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
+  //  return;
+ // }
 
   keyDownTimes = {};
   lastKeyReleaseTime = null;
   individualKeys = [];
   digraphs = [];
   testCompleted = false;
-  duration = 30;
+  duration = 300;
 
   area.value = "";
   area.disabled = false;
@@ -116,7 +116,7 @@ startBtn.onclick = () => {
 
   loadInitialWords();
 
-  timerDisplay.textContent = "Time Left: 0:30";
+  timerDisplay.textContent = "Time Left: 5:00";
 
   timerInterval = setInterval(() => {
     duration--;
@@ -210,17 +210,8 @@ submitBtn.onclick = async () => {
     );
 
     if (!response.ok) throw new Error();
-    
-    const result = await response.json();
 
-const statusMsg = document.getElementById("statusMsg");
-
-statusMsg.textContent = result.wonLottery
-  ? "🎉 Congratulations! You won a chocolate 🍫"
-  : "✅ Data submitted successfully!";
-
-statusMsg.style.color = result.wonLottery ? "green" : "blue";
-
+      alert("Data submitted Successfully!");
     } catch (err) {
     alert("Submission failed. Try again.");
     submitBtn.disabled = false;
