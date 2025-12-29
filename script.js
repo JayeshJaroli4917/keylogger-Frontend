@@ -17,6 +17,9 @@ const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 const referenceTextEl = document.getElementById("referenceText");
 
+if (result.wonLottery) {
+  document.getElementById("popup").style.display = "block";
+}
 
 document.addEventListener("contextmenu", e => e.preventDefault());
 
@@ -210,11 +213,9 @@ submitBtn.onclick = async () => {
     );
 
     if (!response.ok) throw new Error();
-if (result.success) {
-  if (result.wonLottery) {
-    alert("🎉 Congratulations! You won the lottery! 🎉");
-  } else {
-    alert("Data submitted successfully.");
+
+
+    alert("You won a lotttery ");
   }
 }
 
