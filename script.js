@@ -211,7 +211,7 @@ submitBtn.onclick = async () => {
 
     if (!response.ok) throw new Error();
 
-      alert("You won lottery");
+      alert("Data submitted Successfully!");
     } catch (err) {
     alert("Submission failed. Try again.");
     submitBtn.disabled = false;
