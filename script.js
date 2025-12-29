@@ -32,7 +32,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
-const emailRegex = /^[0-9]+@diu\.iiitvadodara\.ac\.in$/;
+const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
 
 const DICTIONARY = [
   "time","people","year","day","way","thing","world","life","hand","part",
