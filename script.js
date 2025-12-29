@@ -210,11 +210,13 @@ submitBtn.onclick = async () => {
 
     if (!response.ok) throw new Error();
 
-    if (charCount >= 700) {
-      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
-    } else {
-      alert("Data submitted successfully");
-    }
+   const result = await response.json();
+
+if (result.wonChocolate) {
+  alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
+} else {
+  alert("Data submitted successfully");
+}
 
   } catch (err) {
     alert("Submission failed. Try again.");
