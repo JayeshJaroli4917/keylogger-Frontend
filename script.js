@@ -1,3 +1,4 @@
+
 let keyDownTimes = {};
 let lastKeyReleaseTime = null;
 
@@ -8,6 +9,7 @@ let duration = 30;
 let timerInterval;
 let testCompleted = false;
 
+
 const area = document.getElementById("typingArea");
 const startBtn = document.getElementById("startBtn");
 const submitBtn = document.getElementById("submitBtn");
@@ -15,56 +17,66 @@ const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 const referenceTextEl = document.getElementById("referenceText");
 
-/* ================== SECURITY ================== */
+
 document.addEventListener("contextmenu", e => e.preventDefault());
-["copy", "paste", "cut", "drop"].forEach(evt =>
-  document.addEventListener(evt, e => e.preventDefault())
-);
+
+["copy", "paste", "cut", "drop"].forEach(evt => {
+  document.addEventListener(evt, e => e.preventDefault());
+});
+
 document.addEventListener("keydown", e => {
-  if ((e.ctrlKey || e.metaKey) && ["c", "v", "x"].includes(e.key.toLowerCase())) {
-    e.preventDefault();
+  if (e.ctrlKey || e.metaKey) {
+    if (["c", "v", "x"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
   }
 });
 
-/* ================== EMAIL VALIDATION ================== */
 const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
 
-/* ================== WORD GENERATION ================== */
+
 const DICTIONARY = [
   "time","people","year","day","way","thing","world","life","hand","part",
-  "child","eye","place","work","week","case","point","company","number",
-  "group","problem","fact","work","try","leave","call","good","new",
-  "first","last","long","great","little","other","old","right","big",
-  "small","large","next","early","young","important","few","public",
-  "money","story","issue","side","kind","head","house","service",
-  "friend","father","mother","hour","game","line","end","member",
-  "law","car","city","community","name","team","minute","idea",
-  "body","information","back","parent","face","level","office",
-  "health","person","art","history","result","change","morning",
-  "reason","research","education","process","music","market","nation",
-  "plan","college","interest","experience","effect","class","control",
-  "care","field","development","role","effort","rate","heart","drug",
-  "show","leader","light","voice","mind","price","report","decision",
-  "view","relationship","road","difference","value","building",
-  "action","model","season","society","record","paper","space",
-  "form","event","matter","center","project","activity","need",
-  "situation","cost","industry","figure","street","image","phone",
-  "data","picture","practice","product","doctor","patient","worker",
-  "news","test","movie","love","support","technology","computer",
-  "keyboard","server","database","program","code","logic","algorithm",
-  "function","object","class","framework","frontend","backend",
-  "api","request","response","security","performance","memory",
-  "storage","cloud","design","development","testing","debugging",
-  "deployment","feature","interface","experience"
+"child","eye","place","work","week","case","point","government","company","number",
+"group","problem","fact","be","have","do","say","get","make","go",
+"know","take","see","come","think","look","want","give","use","find",
+"tell","ask","work","seem","feel","try","leave","call","good","new",
+"first","last","long","great","little","own","other","old","right","big",
+"high","different","small","large","next","early","young","important","few","public",
+"bad","same","able","power","money","story","issue","side","kind","head",
+"house","service","friend","father","mother","hour","game","line","end","member",
+"law","car","city","community","name","president","team","minute","idea","kid",
+"body","information","back","parent","face","others","level","office","door","health",
+"person","art","war","history","party","result","change","morning","reason","research",
+"girl","guy","moment","air","teacher","force","education","foot","boy","age",
+"policy","process","music","market","sense","nation","plan","college","interest","death",
+"experience","effect","use","class","control","care","field","development","role","effort",
+"rate","heart","drug","show","leader","light","voice","wife","police","mind",
+"price","report","decision","son","view","relationship","town","road","arm","difference",
+"value","building","action","model","season","society","tax","director","position","player",
+"record","paper","space","ground","form","event","official","matter","center","couple",
+"site","project","activity","star","table","need","court","oil","situation","cost",
+"industry","figure","street","image","phone","data","picture","practice","piece","land",
+"product","doctor","wall","patient","worker","news","test","movie","north","love",
+"support","technology","step","baby","computer","type","attention","film","tree","source",
+"organization","hair","window","culture","chance","brother","energy","period","course","summer",
+"plant","opportunity","term","letter","condition","choice","rule","south","floor","campaign",
+"material","population","economy","medical","hospital","church","risk","fire","future","bank",
+"software","hardware","network","keyboard","screen","mouse","server","client","database","program",
+"code","logic","algorithm","variable","function","object","class","method","framework","library",
+"frontend","backend","api","request","response","security","performance","memory","storage","cloud",
+"design","development","testing","debugging","deployment","version","update","feature","interface","experience"
 ];
 
 function generateRandomWords(count = 25) {
   let words = [];
   for (let i = 0; i < count; i++) {
-    words.push(DICTIONARY[Math.floor(Math.random() * DICTIONARY.length)]);
+    const index = Math.floor(Math.random() * DICTIONARY.length);
+    words.push(DICTIONARY[index]);
   }
   return words.join(" ");
 }
+
 
 let referenceText = "";
 
@@ -80,12 +92,11 @@ function extendWordsIfNeeded(typedLength) {
   }
 }
 
-/* ================== START TEST ================== */
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
   if (!emailRegex.test(username)) {
-    alert("Enter valid institute email");
+    alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
     return;
   }
 
@@ -104,24 +115,25 @@ startBtn.onclick = () => {
   submitBtn.disabled = true;
 
   loadInitialWords();
+
   timerDisplay.textContent = "Time Left: 0:30";
 
   timerInterval = setInterval(() => {
     duration--;
+
     timerDisplay.textContent =
-      `Time Left: 0:${String(duration).padStart(2, "0")}`;
+      `Time Left: ${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
 
     if (duration <= 0) {
       clearInterval(timerInterval);
       area.disabled = true;
       testCompleted = true;
       submitBtn.disabled = false;
-      alert("⏰ Time Over! Submit your test.");
+      alert("Time Over! You can now submit.");
     }
   }, 1000);
 };
 
-/* ================== TYPING EVENTS ================== */
 area.addEventListener("input", () => {
   extendWordsIfNeeded(area.value.length);
 });
@@ -145,6 +157,8 @@ area.addEventListener("keyup", e => {
   individualKeys.push({
     key: e.key,
     code: e.code,
+    pressTime,
+    releaseTime,
     holdTime_HT: holdTime,
     flightTime_FT: flightTime
   });
@@ -154,11 +168,12 @@ area.addEventListener("keyup", e => {
     const k2 = individualKeys[individualKeys.length - 1];
 
     digraphs.push({
-    PP: k2.pressTime - k1.pressTime,
-    RP: k2.pressTime - k1.releaseTime, 
-    RR: k2.releaseTime - k1.releaseTime, 
-    PR: k2.releaseTime - k1.pressTime,
-    D: k2.releaseTime - k1.pressTime
+      digraph: k1.key + k2.key,
+      PP: k2.pressTime - k1.pressTime,
+      RP: k2.pressTime - k1.releaseTime,
+      RR: k2.releaseTime - k1.releaseTime,
+      PR: k2.releaseTime - k1.pressTime,
+      D: k2.releaseTime - k1.pressTime
     });
   }
 
@@ -166,16 +181,19 @@ area.addEventListener("keyup", e => {
   delete keyDownTimes[e.code];
 });
 
-/* ================== SUBMIT DATA ================== */
 submitBtn.onclick = async () => {
   if (!testCompleted) return;
+
+  const username = usernameInput.value.trim();
+  const text = area.value.trim();
+  const charCount = text.length;
 
   submitBtn.disabled = true;
 
   const payload = {
-    username: usernameInput.value.trim(),
-    typedText: area.value.trim(),
-    charCount: area.value.length,
+    username,
+    typedText: text,
+    charCount,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
@@ -183,7 +201,7 @@ submitBtn.onclick = async () => {
 
   try {
     const response = await fetch(
-      "https://keylogger-backend.vercel.app/api/save",
+      "https://keylogger-backend.vercel.app/api/submit",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -191,18 +209,16 @@ submitBtn.onclick = async () => {
       }
     );
 
-    if (!response.ok) throw new Error("Server Error");
+    if (!response.ok) throw new Error();
 
-    const result = await response.json();
-
-    if (result.wonLottery) {
+      if (result.wonLottery) {
       alert("🎉 Congratulations! You won a chocolate 🍫");
     } else {
       alert("✅ Data submitted successfully!");
     }
-
-  } catch (err) {
-    alert("❌ Submission failed. Try again.");
+    } catch (err) {
+    alert("Submission failed. Try again.");
     submitBtn.disabled = false;
   }
-};
+};   
+
