@@ -154,8 +154,11 @@ area.addEventListener("keyup", e => {
     const k2 = individualKeys[individualKeys.length - 1];
 
     digraphs.push({
-      digraph: k1.key + k2.key,
-      PP: k2.holdTime_HT - k1.holdTime_HT
+    PP: k2.pressTime - k1.pressTime,
+    RP: k2.pressTime - k1.releaseTime, 
+    RR: k2.releaseTime - k1.releaseTime, 
+    PR: k2.releaseTime - k1.pressTime,
+    D: k2.releaseTime - k1.pressTime
     });
   }
 
