@@ -5,7 +5,7 @@ let lastKeyReleaseTime = null;
 let individualKeys = [];
 let digraphs = [];
 
-let duration = 300;
+let duration = 30;
 let timerInterval;
 let testCompleted = false;
 
@@ -105,7 +105,7 @@ startBtn.onclick = () => {
   individualKeys = [];
   digraphs = [];
   testCompleted = false;
-  duration = 300;
+  duration = 30;
 
   area.value = "";
   area.disabled = false;
@@ -116,7 +116,7 @@ startBtn.onclick = () => {
 
   loadInitialWords();
 
-  timerDisplay.textContent = "Time Left: 5:00";
+  timerDisplay.textContent = "Time Left: 0:30";
 
   timerInterval = setInterval(() => {
     duration--;
