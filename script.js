@@ -210,12 +210,17 @@ submitBtn.onclick = async () => {
     );
 
     if (!response.ok) throw new Error();
+    
+    const result = await response.json();
 
-      if (result.wonLottery) {
-      alert("🎉 Congratulations! You won a chocolate 🍫");
-    } else {
-      alert("✅ Data submitted successfully!");
-    }
+const statusMsg = document.getElementById("statusMsg");
+
+statusMsg.textContent = result.wonLottery
+  ? "🎉 Congratulations! You won a chocolate 🍫"
+  : "✅ Data submitted successfully!";
+
+statusMsg.style.color = result.wonLottery ? "green" : "blue";
+
     } catch (err) {
     alert("Submission failed. Try again.");
     submitBtn.disabled = false;
