@@ -1,4 +1,3 @@
-
 let keyDownTimes = {};
 let lastKeyReleaseTime = null;
 
@@ -9,14 +8,12 @@ let duration = 300;
 let timerInterval;
 let testCompleted = false;
 
-
 const area = document.getElementById("typingArea");
 const startBtn = document.getElementById("startBtn");
 const submitBtn = document.getElementById("submitBtn");
 const timerDisplay = document.getElementById("timer");
 const usernameInput = document.getElementById("username");
 const referenceTextEl = document.getElementById("referenceText");
-
 
 document.addEventListener("contextmenu", e => e.preventDefault());
 
@@ -36,35 +33,35 @@ const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
 
 const DICTIONARY = [
   "time","people","year","day","way","thing","world","life","hand","part",
-"child","eye","place","work","week","case","point","government","company","number",
-"group","problem","fact","be","have","do","say","get","make","go",
-"know","take","see","come","think","look","want","give","use","find",
-"tell","ask","work","seem","feel","try","leave","call","good","new",
-"first","last","long","great","little","own","other","old","right","big",
-"high","different","small","large","next","early","young","important","few","public",
-"bad","same","able","power","money","story","issue","side","kind","head",
-"house","service","friend","father","mother","hour","game","line","end","member",
-"law","car","city","community","name","president","team","minute","idea","kid",
-"body","information","back","parent","face","others","level","office","door","health",
-"person","art","war","history","party","result","change","morning","reason","research",
-"girl","guy","moment","air","teacher","force","education","foot","boy","age",
-"policy","process","music","market","sense","nation","plan","college","interest","death",
-"experience","effect","use","class","control","care","field","development","role","effort",
-"rate","heart","drug","show","leader","light","voice","wife","police","mind",
-"price","report","decision","son","view","relationship","town","road","arm","difference",
-"value","building","action","model","season","society","tax","director","position","player",
-"record","paper","space","ground","form","event","official","matter","center","couple",
-"site","project","activity","star","table","need","court","oil","situation","cost",
-"industry","figure","street","image","phone","data","picture","practice","piece","land",
-"product","doctor","wall","patient","worker","news","test","movie","north","love",
-"support","technology","step","baby","computer","type","attention","film","tree","source",
-"organization","hair","window","culture","chance","brother","energy","period","course","summer",
-"plant","opportunity","term","letter","condition","choice","rule","south","floor","campaign",
-"material","population","economy","medical","hospital","church","risk","fire","future","bank",
-"software","hardware","network","keyboard","screen","mouse","server","client","database","program",
-"code","logic","algorithm","variable","function","object","class","method","framework","library",
-"frontend","backend","api","request","response","security","performance","memory","storage","cloud",
-"design","development","testing","debugging","deployment","version","update","feature","interface","experience"
+  "child","eye","place","work","week","case","point","government","company","number",
+  "group","problem","fact","be","have","do","say","get","make","go",
+  "know","take","see","come","think","look","want","give","use","find",
+  "tell","ask","work","seem","feel","try","leave","call","good","new",
+  "first","last","long","great","little","own","other","old","right","big",
+  "high","different","small","large","next","early","young","important","few","public",
+  "bad","same","able","power","money","story","issue","side","kind","head",
+  "house","service","friend","father","mother","hour","game","line","end","member",
+  "law","car","city","community","name","president","team","minute","idea","kid",
+  "body","information","back","parent","face","others","level","office","door","health",
+  "person","art","war","history","party","result","change","morning","reason","research",
+  "girl","guy","moment","air","teacher","force","education","foot","boy","age",
+  "policy","process","music","market","sense","nation","plan","college","interest","death",
+  "experience","effect","use","class","control","care","field","development","role","effort",
+  "rate","heart","drug","show","leader","light","voice","wife","police","mind",
+  "price","report","decision","son","view","relationship","town","road","arm","difference",
+  "value","building","action","model","season","society","tax","director","position","player",
+  "record","paper","space","ground","form","event","official","matter","center","couple",
+  "site","project","activity","star","table","need","court","oil","situation","cost",
+  "industry","figure","street","image","phone","data","picture","practice","piece","land",
+  "product","doctor","wall","patient","worker","news","test","movie","north","love",
+  "support","technology","step","baby","computer","type","attention","film","tree","source",
+  "organization","hair","window","culture","chance","brother","energy","period","course","summer",
+  "plant","opportunity","term","letter","condition","choice","rule","south","floor","campaign",
+  "material","population","economy","medical","hospital","church","risk","fire","future","bank",
+  "software","hardware","network","keyboard","screen","mouse","server","client","database","program",
+  "code","logic","algorithm","variable","function","object","class","method","framework","library",
+  "frontend","backend","api","request","response","security","performance","memory","storage","cloud",
+  "design","development","testing","debugging","deployment","version","update","feature","interface","experience"
 ];
 
 function generateRandomWords(count = 25) {
@@ -75,7 +72,6 @@ function generateRandomWords(count = 25) {
   }
   return words.join(" ");
 }
-
 
 let referenceText = "";
 
@@ -91,11 +87,19 @@ function extendWordsIfNeeded(typedLength) {
   }
 }
 
+/* =======================
+   START BUTTON
+   ======================= */
 startBtn.onclick = () => {
-  const username = usernameInput.value.trim();
+  if (localStorage.getItem("submitted")) {
+    alert("You have already completed the test.");
+    return;
+  }
+
+  const username = usernameInput.value.trim().toLowerCase();
 
   if (!emailRegex.test(username)) {
-    alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
+    alert("Enter valid institute email");
     return;
   }
 
@@ -180,19 +184,21 @@ area.addEventListener("keyup", e => {
   delete keyDownTimes[e.code];
 });
 
+/* =======================
+   SUBMIT BUTTON
+   ======================= */
 submitBtn.onclick = async () => {
   if (!testCompleted) return;
 
-  const username = usernameInput.value.trim();
+  const username = usernameInput.value.trim().toLowerCase();
   const text = area.value.trim();
-  const charCount = text.length;
 
   submitBtn.disabled = true;
 
   const payload = {
     username,
     typedText: text,
-    charCount,
+    charCount: text.length,
     timestamp: new Date().toISOString(),
     individualKeys,
     digraphs
@@ -210,13 +216,15 @@ submitBtn.onclick = async () => {
 
     if (!response.ok) throw new Error();
 
-   const result = await response.json();
+    const result = await response.json();
 
-if (result.wonChocolate) {
-  alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
-} else {
-  alert("Data submitted successfully");
-}
+    if (result.wonChocolate) {
+      alert("Data submitted successfully 🎉 and you won a chocolate 🍫");
+    } else {
+      alert("Data submitted successfully");
+    }
+
+    localStorage.setItem("submitted", "true");
 
   } catch (err) {
     alert("Submission failed. Try again.");
