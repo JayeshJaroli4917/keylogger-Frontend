@@ -202,7 +202,6 @@ submitBtn.onclick = async () => {
     }
 
   } catch (err) {
-    console.error(err);
     alert("❌ Submission failed. Try again.");
     submitBtn.disabled = false;
   }
