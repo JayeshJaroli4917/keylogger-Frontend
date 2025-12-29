@@ -1,28 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Enter Username</title>
-</head>
-<body>
+<html lang="en"> 
+    <head>
+        <meta charset="UTF-8">
+        <title>KeyLogger</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h2>Keystroke Data Collection</h2>
+        <label >User Name</label>
+        <input type="text" id="username" placeholder="Enter your Institution ID..">
+    
+    <p id="timer">Time left: 5:00</p>
+    <div id="referenceText" class="reference-text">
+</div>
 
-  <h2>Enter Username</h2>
-  <input type="text" id="username" placeholder="Enter your Institution ID">
-  <button onclick="saveUsername()">Continue</button>
-
-  <script>
-    function saveUsername() {
-      const username = document.getElementById("username").value.trim();
-
-      if (!username) {
-        alert("Please enter username");
-        return;
-      }
-
-      localStorage.setItem("username", username);
-      window.location.href = "typing.html"; // next page
-    }
-  </script>
-
-</body>
+    <textarea  id="typingArea" disabled placeholder="Start Typing..."></textarea>
+    
+    <button id="startBtn">Start Test</button>
+    <button id="submitBtn">Submit</button>
+    
+    <script src="script.js"></script> 
+    </body>
 </html>
