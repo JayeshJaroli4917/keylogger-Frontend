@@ -32,7 +32,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
-//const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
+const emailRegex = /^[a-zA-Z0-9._]+@(diu\.)?iiitvadodara\.ac\.in$/;
 
 
 const DICTIONARY = [
@@ -95,10 +95,10 @@ function extendWordsIfNeeded(typedLength) {
 startBtn.onclick = () => {
   const username = usernameInput.value.trim();
 
- // if (!emailRegex.test(username)) {
-   // alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
-  //  return;
- // }
+  if (!emailRegex.test(username)) {
+  alert("Enter valid institute email: <enrollment>@diu.iiitvadodara.ac.in");
+    return;
+  }
 
   keyDownTimes = {};
   lastKeyReleaseTime = null;
